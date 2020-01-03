@@ -20,8 +20,6 @@ extern "C" {
 #define MODE_SELECT_PERSON 1
 #define MODE_USE_SCALE 2
 
-// D3, D4, D7
-
 WiFiClient espClient;
 PubSubClient client(espClient);
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
