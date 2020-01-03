@@ -5,7 +5,7 @@
 ## parts
 
  * HX711
- * old AEG Waage
+ * AEG PW 4923
  * 128x64 OLED I2C display
  * ESP8266
 
