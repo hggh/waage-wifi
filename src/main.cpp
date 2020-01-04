@@ -47,9 +47,7 @@ void display_person_select() {
   display.display();
 }
 
-void display_scale() {
-  float weight = scale.get_units(10);
-
+void display_weight(float weight, bool send) {
   display.clearDisplay();
 
   display.setCursor(0, 0);
@@ -59,7 +57,36 @@ void display_scale() {
   display.setCursor(2, 20);
   display.print(String(weight / 1000));
   display.println(" kg");
+
+  if (send == true) {
+    display.setCursor(0, 40);
+    display.println("... send");
+  }
   display.display();
+}
+
+void weight_person() {
+  float weight_summery = 0.0;
+
+  for (short i=0; i<5; i++) {
+    float weight = scale.get_units(10);
+    weight_summery += weight;
+    display_weight(weight, false);
+    delay(300);
+  }
+
+  weight_summery = weight_summery / 5;
+
+  char mqtt_queue_name[22] = "";
+  sprintf(mqtt_queue_name, "/scale/weight/person%d", action_person);
+
+  char mqtt_value[10] = "";
+  sprintf(mqtt_value, "%.2f", weight_summery / 1000);
+
+  client.publish(mqtt_queue_name, mqtt_value);
+  display_weight(weight_summery, true);
+
+  delay(5000);
 }
 
 void mqtt_check_connection() {
@@ -137,8 +164,8 @@ void loop() {
   }
 
   if (action_mode == MODE_USE_SCALE) {
-    display_scale();
-    delay(400);
+    weight_person();
+    action_mode = MODE_SELECT_PERSON;
   }
 }
 
